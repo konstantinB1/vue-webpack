@@ -1,15 +1,14 @@
 <template>
-  <div>
+  <div class="layout-wrapper">
     <router-view />
   </div>
 </template>
 
-<script>
-  export default {
-    
-  }
-</script>
+<style lang="scss">
 
-<style lang="scss" scoped>
+body {
+  padding: 0;
+  margin: 0;
+}
 
 </style>

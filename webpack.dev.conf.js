@@ -2,10 +2,12 @@ const path = require('path')
 const { HotModuleReplacementPlugin, DefinePlugin } = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const FriendlyErrorsPlugin = require('friendly-errors-plugin')
 const { merge } = require('webpack-merge')
 const baseConfig = require('./webpack.base.conf')
 const { argv } = require('yargs')
 const port = argv.port || 8080
+const host = argv.host || 'localhost'
 
 module.exports = merge(baseConfig, {
   mode: 'development',
@@ -50,6 +52,7 @@ module.exports = merge(baseConfig, {
         { from: /.*/, to: path.posix.join('/', 'index.html') },
       ],
     },
+    host,
     hot: true,
     contentBase: false,
     compress: true,
@@ -70,6 +73,29 @@ module.exports = merge(baseConfig, {
       filename: 'index.html',
       template: 'index.html',
       inject: true
+    }),
+    new FriendlyErrorsPlugin({
+      onErrors: () => {
+        const notifier = require('node-notifier')
+    
+        return (severity, errors) => {
+          if (severity !== 'error') return
+      
+          const error = errors[0]
+          const filename = error.file && error.file.split('!').pop()
+      
+          notifier.notify({
+            title: 'There was an error',
+            message: severity + ': ' + error.name,
+            subtitle: filename || ''
+          })
+        }
+      },
+      compilationSuccessInfo: {
+        messages: [
+          `Serving content from http://${host}:${port}`
+        ]
+      }
     })
   ]
 })
