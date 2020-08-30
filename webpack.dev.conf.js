@@ -1,7 +1,6 @@
 const path = require('path')
 const { HotModuleReplacementPlugin, DefinePlugin } = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-plugin')
 const { merge } = require('webpack-merge')
 const baseConfig = require('./webpack.base.conf')
@@ -11,7 +10,6 @@ const host = argv.host || 'localhost'
 
 module.exports = merge(baseConfig, {
   mode: 'development',
-  entry: './src/main.js',
   output: {
     path: '/',
     filename: '[name].js',
@@ -20,10 +18,6 @@ module.exports = merge(baseConfig, {
   devtool: 'cheap-module-eval-source-map',
   module: {
     rules: [
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader'
-      },
       {
         test: /\.css$/,
         use: [
@@ -64,7 +58,6 @@ module.exports = merge(baseConfig, {
     quiet: true
   },
   plugins: [
-    new VueLoaderPlugin(),
     new DefinePlugin({
       'process.env': require('./config/dev.env')
     }),

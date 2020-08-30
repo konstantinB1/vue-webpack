@@ -1,7 +1,9 @@
 'use strict'
 const { resolve } = require('path')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
+  entry: resolve(__dirname, 'src/main.js'),
   output: {
     path: '/',
     filename: '[name].js',
@@ -11,11 +13,15 @@ module.exports = {
     extensions: ['.js', '.vue', '.scss', '.css'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve(__dirname, 'src'),
+      '@': resolve(__dirname, 'src')
     }
   },
   module: {
     rules: [
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader'
+      },
       {
         test: /\.js$/,
         loader: 'babel-loader',
@@ -37,6 +43,9 @@ module.exports = {
       }
     ]
   },
+  plugins: [
+    new VueLoaderPlugin()
+  ],
   node: {
     setImmediate: false,
     dgram: 'empty',
